@@ -11,6 +11,62 @@ body {
   background-image: linear-gradient(to right, grey, black);
 }
 
-.user-input input button {
+button {
   color: black;
+  width: fit-content;
+}
+
+input {
+  color: black;
+  width: fit-content;
+}
+
+span {
+  padding: 2%;
+  border-right: 1px #fff solid;
+}
+
+.user-input {
+  display: flex;
+  margin: auto;
+  text-align: center;
+  width: fit-content;
+}
+
+#searchInp {
+  margin: auto;
+}
+#search {
+  margin: auto;
+  margin-top: 2%;
+}
+
+.data {
+  margin: auto;
+  text-align: center;
+  margin-top: 20%;
+  width: fit-content;
+  padding: 5%;
+  border: 2px white solid;
+  border-radius: 10px;
+}
+
+.details {
+  background-color: #fff;
+}
+
+.country {
+  border-right: none;
+}
+
+.date {
+  border: none;
+}
+
+.more-detail {
+  margin-top: 15%;
+}
+
+.sun {
+  border-right: none;
 }

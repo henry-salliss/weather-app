@@ -118,7 +118,7 @@
 69C:\Users\Henry\Documents\projects\weather-app\node_modules\tar-stream132740314272942623 1
 68C:\Users\Henry\Documents\projects\weather-app\node_modules\hash-base132738732287329958 1
 122C:\Users\Henry\Documents\projects\weather-app\node_modules\postcss-modules-values\node_modules\source-map\lib\array-set.js131411568470000000 0
-50C:\Users\Henry\Documents\projects\weather-app\dist132740315325034927 1
+50C:\Users\Henry\Documents\projects\weather-app\dist132740390536133529 1
 70C:\Users\Henry\Documents\projects\weather-app\node_modules\log-symbols132738732291055961 1
 95C:\Users\Henry\Documents\projects\weather-app\node_modules\command-exists\lib\command-exists.js121436361000000000 0
 109C:\Users\Henry\Documents\projects\weather-app\node_modules\sharp\vendor\8.10.6\include\libgsf-1\gsf\gsf-fwd.h132612604640000000 0
@@ -149,7 +149,7 @@
 102C:\Users\Henry\Documents\projects\weather-app\node_modules\highlight.js\scss\atelier-savanna-dark.scss121436361000000000 0
 65C:\Users\Henry\Documents\projects\weather-app\node_modules\@iarna132738732242439430 1
 93C:\Users\Henry\Documents\projects\weather-app\node_modules\@parcel\core\src\resolveOptions.js121436361000000000 0
-56C:\Users\Henry\Documents\projects\weather-app\index.html132740315039332598 0
+56C:\Users\Henry\Documents\projects\weather-app\index.html132740359888641738 0
 86C:\Users\Henry\Documents\projects\weather-app\node_modules\convert-source-map\index.js121436361000000000 0
 88C:\Users\Henry\Documents\projects\weather-app\node_modules\public-encrypt\test\1024.priv121436361000000000 0
 108C:\Users\Henry\Documents\projects\weather-app\node_modules\performance-now\test\scripts\initial-value.coffee131284742740000000 0
@@ -2811,7 +2811,7 @@
 76C:\Users\Henry\Documents\projects\weather-app\node_modules\yallist\README.md121436361000000000 0
 81C:\Users\Henry\Documents\projects\weather-app\node_modules\shebang-regex\index.js130686233280000000 0
 93C:\Users\Henry\Documents\projects\weather-app\node_modules\core-js\features\symbol\matcher.js121436361000000000 0
-61C:\Users\Henry\Documents\projects\weather-app\dist\index.html132740315041089955 0
+61C:\Users\Henry\Documents\projects\weather-app\dist\index.html132740359890008136 0
 81C:\Users\Henry\Documents\projects\weather-app\node_modules\node-releases\data\raw132738732188678079 1
 74C:\Users\Henry\Documents\projects\weather-app\node_modules\uri-js\dist\es5132738732175334906 1
 82C:\Users\Henry\Documents\projects\weather-app\node_modules\core-js\features\regexp132738732224313865 1
@@ -9104,7 +9104,7 @@
 78C:\Users\Henry\Documents\projects\weather-app\node_modules\dotenv\CHANGELOG.md121436361000000000 0
 110C:\Users\Henry\Documents\projects\weather-app\node_modules\caniuse-lite\data\features\text-underline-offset.js121436361000000000 0
 75C:\Users\Henry\Documents\projects\weather-app\node_modules\ncp\package.json132738732298570134 0
-69C:\Users\Henry\Documents\projects\weather-app\dist\index.971090c7.css132740315324992682 0
+69C:\Users\Henry\Documents\projects\weather-app\dist\index.971090c7.css132740371039294530 0
 67C:\Users\Henry\Documents\projects\weather-app\node_modules\ncp\test132738732193753467 1
 82C:\Users\Henry\Documents\projects\weather-app\node_modules\ncp\test\modified-files132738732190157017 1
 122C:\Users\Henry\Documents\projects\weather-app\node_modules\@parcel\reporter-dev-server\node_modules\ws\lib\event-target.js121436361000000000 0
@@ -10352,7 +10352,7 @@
 89C:\Users\Henry\Documents\projects\weather-app\node_modules\lodash\fp\sortedLastIndexOf.js121436361000000000 0
 101C:\Users\Henry\Documents\projects\weather-app\node_modules\lmdb-store\dependencies\lz4\lib\lz4frame.h121436361000000000 0
 82C:\Users\Henry\Documents\projects\weather-app\node_modules\lodash\fp\sortedUniq.js121436361000000000 0
-72C:\Users\Henry\Documents\projects\weather-app\dist\index.fc755277.js.map132740314467816349 0
+72C:\Users\Henry\Documents\projects\weather-app\dist\index.fc755277.js.map132740390536133529 0
 84C:\Users\Henry\Documents\projects\weather-app\node_modules\lodash\fp\sortedUniqBy.js121436361000000000 0
 77C:\Users\Henry\Documents\projects\weather-app\node_modules\lodash\fp\split.js121436361000000000 0
 124C:\Users\Henry\Documents\projects\weather-app\node_modules\@parcel\transformer-react-refresh-wrap\src\helpers\.eslintrc.json121436361000000000 0
@@ -10998,7 +10998,7 @@
 82C:\Users\Henry\Documents\projects\weather-app\node_modules\browserslist\index.d.ts121436361000000000 0
 109C:\Users\Henry\Documents\projects\weather-app\node_modules\jsdom\lib\jsdom\living\generated\ShadowRootInit.js121436361000000000 0
 100C:\Users\Henry\Documents\projects\weather-app\node_modules\caniuse-lite\data\features\mediasource.js121436361000000000 0
-58C:\Users\Henry\Documents\projects\weather-app\js\script.js132740313243024526 0
+58C:\Users\Henry\Documents\projects\weather-app\js\script.js132740390573809852 0
 96C:\Users\Henry\Documents\projects\weather-app\node_modules\core-js\stable\symbol\has-instance.js121436361000000000 0
 109C:\Users\Henry\Documents\projects\weather-app\node_modules\jsdom\lib\jsdom\living\generated\ShadowRootMode.js121436361000000000 0
 98C:\Users\Henry\Documents\projects\weather-app\node_modules\css-tree\lib\syntax\node\Declaration.js121436361000000000 0
@@ -17127,8 +17127,8 @@
 73C:\Users\Henry\Documents\projects\weather-app\node_modules\.bin\which.ps1132738732311544992 0
 58C:\Users\Henry\Documents\projects\weather-app\js\config.js132740313342202255 0
 69C:\Users\Henry\Documents\projects\weather-app\dist\cloud.460787ec.png132740314466356550 0
-73C:\Users\Henry\Documents\projects\weather-app\dist\index.971090c7.css.map132740315325018935 0
+73C:\Users\Henry\Documents\projects\weather-app\dist\index.971090c7.css.map132740371039314472 0
 69C:\Users\Henry\Documents\projects\weather-app\dist\index.d2d7a0e4.css132740314467766503 0
-68C:\Users\Henry\Documents\projects\weather-app\dist\index.fc755277.js132740314467766503 0
+68C:\Users\Henry\Documents\projects\weather-app\dist\index.fc755277.js132740390536114472 0
 63C:\Users\Henry\Documents\projects\weather-app\css\normalize.css132738705419673634 0
-59C:\Users\Henry\Documents\projects\weather-app\css\style.css132740315454033718 0
+59C:\Users\Henry\Documents\projects\weather-app\css\style.css132740371038489630 0
