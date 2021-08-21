@@ -17,7 +17,27 @@
     <script type="module" defer src="js/script.js"></script>
     <title>Weather app</title>
   </head>
+
   <body>
-    <p>HELLO</p>
+    <div class="container">
+      <div class="user-input">
+        <h1 id="title">Search for weather</h1>
+        <input type="text" name="search" id="search" />
+        <button type="submit">Search</button>
+      </div>
+      <img id="weatherImg " src="/img/cloud.png" alt="weather image" />
+      <div class="main-details">
+        <span class="temp">26deg</span>
+        <span class="desc">Cloudy</span>
+        <span class="city">London</span>
+        <span class="country">UK</span>
+        <span class="data">8th April</span>
+      </div>
+      <div class="more-detail">
+        <span class="windSpeed">2mph</span>
+        <span class="rain">12%</span>
+        <span class="sun">81%</span>
+      </div>
+    </div>
   </body>
 </html>

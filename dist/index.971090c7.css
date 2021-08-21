@@ -4,6 +4,15 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
   flex-direction: column;
+  color: #fff;
+}
+
+body {
+  background-image: linear-gradient(to right, grey, black);
+}
+
+.user-input input button {
+  color: black;
 }
 
 /*# sourceMappingURL=index.971090c7.css.map */

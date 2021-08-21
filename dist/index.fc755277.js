@@ -456,13 +456,13 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"hYC5h":[function(require,module,exports) {
 var _config = require("./config");
-console.log("works");
-const getWeather = async function() {
-    const response = await fetch(`${_config.API_URL}${_config.KEY}`);
-    console.log(response);
-    console.log("hello");
+const getWeather = async function(city) {
+    const response = await fetch(`${_config.API_URL}${city}&appid=${_config.KEY}`);
+    const data = await response.json();
+    const { main , name , sys , wind , weather  } = data;
+    console.log(main, name, sys, wind, weather);
 };
-getWeather();
+getWeather("london");
 
 },{"./config":"kjqCk"}],"kjqCk":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -472,7 +472,7 @@ parcelHelpers.export(exports, "KEY", ()=>KEY
 parcelHelpers.export(exports, "API_URL", ()=>API_URL
 );
 const KEY = "b8922c8869fac17d45f1eb3a542ef3a1";
-const API_URL = "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=";
+const API_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
 exports.interopDefault = function(a) {
