@@ -456,10 +456,12 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"hYC5h":[function(require,module,exports) {
 var _config = require("./config");
+console.log("works");
 // Get html elements
 const weatherContainer = document.querySelector(".data");
 const weatherHTML = function(data) {
-    return `\n        <span class="date">8th April</span>\n\n        <img id="weatherImg " src="http://openweathermap.org/img/wn/01d.png" alt="weather image" />\n        \n        <div class="main-details">\n          <span class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}</span>\n          <span class="desc">${data.weather[0].description}</span>\n          <span class="city">${data.name}</span>\n          <span class="country">${data.sys.country}</span>\n        </div>\n        <div class="more-detail">\n          <span class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}</span>\n          <span class="rain"> <i class="fas fa-umbrella"></i> 12%</span>\n          <span class="sun"><i class="fas fa-sun"></i> 81%</span>\n        </div>\n  `;
+    const src = "http://openweathermap.org/img/wn/01d.png";
+    return `\n        <span class="date">8th April</span>\n\n        <img id="weatherImg " src="http://openweathermap.org/img/wn/01d.png" alt="weather image">\n\n        <div class="main-details">\n          <span class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}</span>\n          <span class="desc">${data.weather[0].description}</span>\n          <span class="city">${data.name}</span>\n          <span class="country">${data.sys.country}</span>\n        </div>\n        <div class="more-detail">\n          <span class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}</span>\n          <span class="rain"> <i class="fas fa-umbrella"></i> 12%</span>\n          <span class="sun"><i class="fas fa-sun"></i> 81%</span>\n        </div>\n  `;
 };
 const getWeather = async function(location) {
     try {
@@ -473,7 +475,7 @@ const getWeather = async function(location) {
         throw err;
     }
 };
-getWeather("london");
+getWeather("moscow");
 
 },{"./config":"kjqCk"}],"kjqCk":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
