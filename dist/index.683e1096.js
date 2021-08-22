@@ -456,25 +456,69 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"c1VqH":[function(require,module,exports) {
 var _config = require("./config");
-console.log("works");
 // Get html elements
 const weatherContainer = document.querySelector(".data");
+const input = document.querySelector("#searchInp");
+const searchBtn = document.querySelector("#search");
+// get current location
+const getLocation = function() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        const { latitude , longitude  } = position.coords;
+        return longitude;
+    });
+};
+getLocation();
+// Make search work
+searchBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    getWeather(input.value);
+});
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") getWeather(input.value);
+});
+// Make load spinner
+const renderSpinner = function() {
+    const spinnerHTML = `\n        <div class="spinner">\n          <i class="fas fa-spinner"></i>\n        </div>\n  `;
+    weatherContainer.innerHTML = "";
+    weatherContainer.insertAdjacentHTML("afterbegin", spinnerHTML);
+};
+// Get date
+const getDate = function(date) {
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December", 
+    ];
+    const day = date.getDate();
+    const month = date.getMonth();
+    return `${day} / ${months[month]}`;
+};
 const weatherHTML = function(data) {
-    const src = "http://openweathermap.org/img/wn/01d.png";
-    return `\n        <span class="date">8th April</span>\n\n        <i class='owf owf-${data.weather[0].id} owf-10x'></i>\n\n        <div class="main-details">\n          <span class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}</span>\n          <span class="desc">${data.weather[0].description}</span>\n          <span class="city">${data.name}</span>\n          <span class="country">${data.sys.country}</span>\n        </div>\n        <div class="more-detail">\n          <span class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}</span>\n          <span class="rain"> <i class="fas fa-umbrella"></i> 12%</span>\n          <span class="sun"><i class="fas fa-sun"></i> 81%</span>\n        </div>\n  `;
+    console.log(data.coord);
+    return `\n      <div class='weatherData'>\n        <p class="date">${getDate(new Date())}</p>\n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C</p>\n          <p class="desc">${data.weather[0].description}</p>\n          <p class="city">${data.name}</p>\n          <p class="country">${data.sys.country}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="rain"> <i class="fas fa-umbrella"></i> 12%</p>\n          <p class="sun"><i class="fas fa-sun"></i> 81%</p>\n        </div>\n      </div>\n  `;
 };
 const getWeather = async function(location) {
     try {
+        renderSpinner();
         // AJAX call
         const response = await fetch(`${_config.API_URL}${location}&appid=${_config.KEY}`);
         const data = await response.json();
         const html = weatherHTML(data);
+        weatherContainer.innerHTML = "";
         weatherContainer.insertAdjacentHTML("afterbegin", html);
     } catch (err) {
         throw err;
     }
 };
-getWeather("madrid");
 
 },{"./config":"beA2m"}],"beA2m":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
