@@ -460,28 +460,7 @@ var _config = require("./config");
 const weatherContainer = document.querySelector(".data");
 const input = document.querySelector("#searchInp");
 const searchBtn = document.querySelector("#search");
-// get current location
-const getLocation = function() {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        const { latitude , longitude  } = position.coords;
-        return longitude;
-    });
-};
-getLocation();
-// Make search work
-searchBtn.addEventListener("click", function(e) {
-    e.preventDefault();
-    getWeather(input.value);
-});
-document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") getWeather(input.value);
-});
-// Make load spinner
-const renderSpinner = function() {
-    const spinnerHTML = `\n        <div class="spinner">\n          <i class="fas fa-spinner"></i>\n        </div>\n  `;
-    weatherContainer.innerHTML = "";
-    weatherContainer.insertAdjacentHTML("afterbegin", spinnerHTML);
-};
+// create html and get date
 // Get date
 const getDate = function(date) {
     const months = [
@@ -502,15 +481,51 @@ const getDate = function(date) {
     const month = date.getMonth();
     return `${day} / ${months[month]}`;
 };
+// create html
 const weatherHTML = function(data) {
-    console.log(data.coord);
     return `\n      <div class='weatherData'>\n        <p class="date">${getDate(new Date())}</p>\n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C</p>\n          <p class="desc">${data.weather[0].description}</p>\n          <p class="city">${data.name}</p>\n          <p class="country">${data.sys.country}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="rain"> <i class="fas fa-umbrella"></i> 12%</p>\n          <p class="sun"><i class="fas fa-sun"></i> 81%</p>\n        </div>\n      </div>\n  `;
 };
+// get current location
+const getLocation = async function() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        const { latitude , longitude  } = position.coords;
+        geolocationData(latitude, longitude);
+    });
+};
+getLocation();
+// get local weather first
+const geolocationData = async function(lat, lng) {
+    try {
+        const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${_config.KEY}`);
+        const data = await response.json();
+        console.log(data);
+        const html = weatherHTML(data);
+        weatherContainer.insertAdjacentHTML("afterbegin", html);
+    } catch (err) {
+        throw err;
+    }
+};
+// Make search work
+searchBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    getWeather(input.value);
+});
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") getWeather(input.value);
+});
+// Make load spinner
+const renderSpinner = function() {
+    const spinnerHTML = `\n        <div class="spinner">\n          <i class="fas fa-spinner"></i>\n        </div>\n  `;
+    weatherContainer.innerHTML = "";
+    weatherContainer.insertAdjacentHTML("afterbegin", spinnerHTML);
+};
+// load data from requested location
 const getWeather = async function(location) {
     try {
         renderSpinner();
         // AJAX call
         const response = await fetch(`${_config.API_URL}${location}&appid=${_config.KEY}`);
+        console.log(response);
         const data = await response.json();
         const html = weatherHTML(data);
         weatherContainer.innerHTML = "";
@@ -527,12 +542,15 @@ parcelHelpers.export(exports, "KEY", ()=>KEY
 );
 parcelHelpers.export(exports, "API_URL", ()=>API_URL
 );
+parcelHelpers.export(exports, "GEO_API_URL", ()=>GEO_API_URL
+);
 parcelHelpers.export(exports, "ICON", ()=>ICON
 );
 parcelHelpers.export(exports, "KELVIN_TO_CELSIUS", ()=>KELVIN_TO_CELSIUS
 );
 const KEY = "b8922c8869fac17d45f1eb3a542ef3a1";
 const API_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+const GEO_API_URL = `http://api.openweathermap.org/data/2.5/weather?lat=`;
 const ICON = "https://openweathermap.org/img/wn/";
 const KELVIN_TO_CELSIUS = function(temp) {
     const celcius = temp - 273.15;
