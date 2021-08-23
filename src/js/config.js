@@ -6,3 +6,8 @@ export const KELVIN_TO_CELSIUS = function (temp) {
   const celcius = temp - 273.15;
   return celcius;
 };
+
+export const KELVIN_TO_FAHRENHEIT = function (temp) {
+  const fahrenheit = ((temp - 273.15) * 9) / 5 + 32;
+  return fahrenheit;
+};

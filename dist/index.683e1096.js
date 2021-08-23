@@ -483,7 +483,7 @@ const getDate = function(date) {
 };
 // create html
 const weatherHTML = function(data) {
-    return `\n      <div class='weatherData'>\n        <p class="date">${getDate(new Date())}</p>\n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C</p>\n          <p class="desc">${data.weather[0].description}</p>\n          <p class="city">${data.name}</p>\n          <p class="country">${data.sys.country}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="rain"> <i class="fas fa-umbrella"></i> 12%</p>\n          <p class="sun"><i class="fas fa-sun"></i> 81%</p>\n        </div>\n      </div>\n  `;
+    return `\n      <section class='weatherData'>\n      <div class='weatherHeader'>\n      <p class="location">${data.name}, ${data.sys.country}</p>\n      <p class='actions'><i class="fas fa-star star"></i><i class="far fa-window-close delete"></i></p>\n      </div>\n        \n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n        <p class="date">${getDate(new Date())}</p>\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C or ${_config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1)}°F</p>\n          <p class="desc">${data.weather[0].description}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="sunrise">\n          <i class="fas fa-sun"></i>\n          ${convertFromUnix(data.sys.sunrise)}am\n        </p>\n          <p class="sunset"><i class="fas fa-moon"></i> ${convertFromUnix(data.sys.sunset)}pm</p>\n        </div>\n      </section>\n  `;
 };
 // get current location
 const getLocation = async function() {
@@ -496,10 +496,11 @@ getLocation();
 // get local weather first
 const geolocationData = async function(lat, lng) {
     try {
+        renderSpinner();
         const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${_config.KEY}`);
         const data = await response.json();
-        console.log(data);
         const html = weatherHTML(data);
+        weatherContainer.innerHTML = "";
         weatherContainer.insertAdjacentHTML("afterbegin", html);
     } catch (err) {
         throw err;
@@ -509,25 +510,71 @@ const geolocationData = async function(lat, lng) {
 searchBtn.addEventListener("click", function(e) {
     e.preventDefault();
     getWeather(input.value);
+    saveToFavourites(input.value);
 });
 document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") getWeather(input.value);
+    if (e.key === "Enter") {
+        getWeather(input.value);
+        saveToFavourites(input.value);
+    }
 });
 // Make load spinner
 const renderSpinner = function() {
     const spinnerHTML = `\n        <div class="spinner">\n          <i class="fas fa-spinner"></i>\n        </div>\n  `;
-    weatherContainer.innerHTML = "";
+    // weatherContainer.innerHTML = "";
     weatherContainer.insertAdjacentHTML("afterbegin", spinnerHTML);
+};
+const favourites = [];
+// save to local storage
+const saveToFavourites = async function(location) {
+    try {
+        // current
+        const current = {
+            location: "",
+            icon: "",
+            temperature: "",
+            description: "",
+            windSpeed: "",
+            sunrise: "",
+            sunset: "",
+            favourite: ""
+        };
+        const response = await fetch(`${_config.API_URL}${location}&appid=${_config.KEY}`);
+        const data = await response.json();
+        // store in current object
+        current.location = data.name + "," + data.sys.country;
+        current.icon = data.weather[0].id;
+        current.temperature = _config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1) + " or " + _config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1);
+        current.description = data.weather[0].description;
+        current.windSpeed = data.wind.speed.toFixed(1);
+        current.sunrise = convertFromUnix(data.sys.sunrise);
+        current.sunset = convertFromUnix(data.sys.sunset);
+        console.log(current);
+        favourites.push(current);
+        console.log(favourites);
+        // make favourite button work
+        weatherContainer.addEventListener("click", function(e) {
+            if (!e.target.classList.contains("star")) return;
+            current.favourite = true;
+            console.log(favourites);
+            localStorage.setItem("favourites", JSON.stringify(favourites));
+        });
+    } catch (err) {
+        throw err;
+    }
 };
 // load data from requested location
 const getWeather = async function(location) {
     try {
         renderSpinner();
         // AJAX call
+        const spinner = document.querySelector(".spinner");
         const response = await fetch(`${_config.API_URL}${location}&appid=${_config.KEY}`);
         const data = await response.json();
+        // add to page
         const html = weatherHTML(data);
-        weatherContainer.innerHTML = "";
+        // weatherContainer.innerHTML = "";
+        spinner.style.display = "none";
         weatherContainer.insertAdjacentHTML("afterbegin", html);
     } catch (err) {
         setTimeout(()=>{
@@ -536,11 +583,25 @@ const getWeather = async function(location) {
         throw err;
     }
 };
+const convertFromUnix = function(unix) {
+    const newTime = new Date(unix * 1000);
+    const newHours = newTime.getHours();
+    let newMinutes = newTime.getMinutes();
+    newMinutes < 10 && (newMinutes = "0" + newMinutes);
+    return newHours + ":" + newMinutes;
+};
 const renderError = function() {
     const html = `\n      <div class="error-container">\n        <i class="fas fa-exclamation-circle"></i>\n        <p class="err-message">Error: Please make valid search.</p>\n      </div>\n  `;
     weatherContainer.innerHTML = "";
-    weatherContainer.insertAdjacentHTML("afterbegin", html);
+    weatherContainer.insertAdjacentHTML("beforebegin", html);
 };
+// Make delete button work
+weatherContainer.addEventListener("click", function(e) {
+    console.log(e.target);
+    if (!e.target.classList.contains("delete")) return;
+    const container = e.target.closest("section");
+    container.classList.add("hide");
+});
 
 },{"./config":"beA2m"}],"beA2m":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -555,6 +616,8 @@ parcelHelpers.export(exports, "ICON", ()=>ICON
 );
 parcelHelpers.export(exports, "KELVIN_TO_CELSIUS", ()=>KELVIN_TO_CELSIUS
 );
+parcelHelpers.export(exports, "KELVIN_TO_FAHRENHEIT", ()=>KELVIN_TO_FAHRENHEIT
+);
 const KEY = "b8922c8869fac17d45f1eb3a542ef3a1";
 const API_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
 const GEO_API_URL = `http://api.openweathermap.org/data/2.5/weather?lat=`;
@@ -562,6 +625,10 @@ const ICON = "https://openweathermap.org/img/wn/";
 const KELVIN_TO_CELSIUS = function(temp) {
     const celcius = temp - 273.15;
     return celcius;
+};
+const KELVIN_TO_FAHRENHEIT = function(temp) {
+    const fahrenheit = (temp - 273.15) * 9 / 5 + 32;
+    return fahrenheit;
 };
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
