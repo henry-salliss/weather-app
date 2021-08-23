@@ -525,14 +525,21 @@ const getWeather = async function(location) {
         renderSpinner();
         // AJAX call
         const response = await fetch(`${_config.API_URL}${location}&appid=${_config.KEY}`);
-        console.log(response);
         const data = await response.json();
         const html = weatherHTML(data);
         weatherContainer.innerHTML = "";
         weatherContainer.insertAdjacentHTML("afterbegin", html);
     } catch (err) {
+        setTimeout(()=>{
+            renderError();
+        }, 2000);
         throw err;
     }
+};
+const renderError = function() {
+    const html = `\n      <div class="error-container">\n        <i class="fas fa-exclamation-circle"></i>\n        <p class="err-message">Error: Please make valid search.</p>\n      </div>\n  `;
+    weatherContainer.innerHTML = "";
+    weatherContainer.insertAdjacentHTML("afterbegin", html);
 };
 
 },{"./config":"beA2m"}],"beA2m":[function(require,module,exports) {

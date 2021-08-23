@@ -4,7 +4,6 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
   flex-direction: column;
-  color: #fff;
 }
 
 body {
@@ -21,6 +20,13 @@ input {
   width: fit-content;
 }
 
+p {
+  padding: 1%;
+}
+
+.owf {
+  color: white;
+}
 /* span {
   padding: 2%;
   border-right: 1px #fff solid;
@@ -55,7 +61,8 @@ input {
 .weatherData {
   border: 4px solid #fff;
   border-radius: 10px;
-  width: 225px;
+  width: 250px;
+  background-color: black;
 }
 
 .details {
@@ -72,8 +79,15 @@ input {
   padding: 2%;
 }
 
+.main-details {
+  color: #fff;
+}
+
 .more-detail {
+  color: black;
+  padding: 5%;
   margin-top: 15%;
+  background-color: rgb(255, 255, 255);
 }
 
 .sun {
@@ -81,10 +95,9 @@ input {
 }
 
 .spinner {
-  /* height: 6rem;
-  width: 6rem; */
-  fill: #f38e82;
   animation: rotate 2s infinite linear;
+  color: white;
+  fill: #f38e82;
 }
 
 @keyframes rotate {
@@ -94,6 +107,23 @@ input {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.error-container {
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  color: white;
+  margin: auto;
+  padding: 2%;
+  text-align: center;
+  width: fit-content;
+}
+
+/* sun style */
+
+.owf-800:before,
+.owf-800-d:before {
+  color: orange;
 }
 
 /*# sourceMappingURL=index.8ca178e6.css.map */

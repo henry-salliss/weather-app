@@ -115,12 +115,27 @@ const getWeather = async function (location) {
     // AJAX call
 
     const response = await fetch(`${API_URL}${location}&appid=${KEY}`);
-    console.log(response);
     const data = await response.json();
     const html = weatherHTML(data);
     weatherContainer.innerHTML = "";
     weatherContainer.insertAdjacentHTML("afterbegin", html);
   } catch (err) {
+    setTimeout(() => {
+      renderError();
+    }, 2000);
+
     throw err;
   }
+};
+
+const renderError = function () {
+  const html = `
+      <div class="error-container">
+        <i class="fas fa-exclamation-circle"></i>
+        <p class="err-message">Error: Please make valid search.</p>
+      </div>
+  `;
+
+  weatherContainer.innerHTML = "";
+  weatherContainer.insertAdjacentHTML("afterbegin", html);
 };
