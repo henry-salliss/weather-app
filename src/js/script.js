@@ -32,6 +32,8 @@ const getDate = function (date) {
 
 // create html
 const weatherHTML = function (data) {
+  allShownData.push(data.name.toLowerCase());
+  console.log(allShownData);
   return `
       <section class='weatherData'>
       <div class='weatherHeader'>
@@ -93,18 +95,31 @@ const geolocationData = async function (lat, lng) {
     throw err;
   }
 };
-
+const allShownData = [];
 // Make search work
 
 searchBtn.addEventListener("click", function (e) {
   e.preventDefault();
-  getWeather(input.value);
-  saveToFavourites(input.value);
+
+  // const checkIfExisting = function (searched, data) {
+  //   const exists = data.includes(searched.toLowerCase());
+  //   return exists;
+  // };
+  let exists;
+  // allShownData.includes(input.value) ? exists === true : exists === false;
+  if (allShownData.includes(input.value)) exists = true;
+  if (!allShownData.includes(input.value)) exists = false;
+  console.log(exists);
+  exists ? renderError("Weather already displayed") : getWeather(input.value);
+  // saveToFavourites(input.value);
+  input.value = "";
 });
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
+    // checkIfExisting(input.value, allShownData);
     getWeather(input.value);
-    saveToFavourites(input.value);
+    // saveToFavourites(input.value);
+    input.value = "";
   }
 });
 
@@ -118,51 +133,6 @@ const renderSpinner = function () {
   `;
   // weatherContainer.innerHTML = "";
   weatherContainer.insertAdjacentHTML("afterbegin", spinnerHTML);
-};
-const favourites = [];
-
-// save to local storage
-
-const saveToFavourites = async function (location) {
-  try {
-    // current
-    const current = {
-      location: "",
-      icon: "",
-      temperature: "",
-      description: "",
-      windSpeed: "",
-      sunrise: "",
-      sunset: "",
-      favourite: "",
-    };
-    const response = await fetch(`${API_URL}${location}&appid=${KEY}`);
-    const data = await response.json();
-    // store in current object
-    current.location = data.name + "," + data.sys.country;
-    current.icon = data.weather[0].id;
-    current.temperature =
-      KELVIN_TO_CELSIUS(data.main.temp).toFixed(1) +
-      " or " +
-      KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1);
-    current.description = data.weather[0].description;
-    current.windSpeed = data.wind.speed.toFixed(1);
-    current.sunrise = convertFromUnix(data.sys.sunrise);
-    current.sunset = convertFromUnix(data.sys.sunset);
-    console.log(current);
-    favourites.push(current);
-    console.log(favourites);
-
-    // make favourite button work
-    weatherContainer.addEventListener("click", function (e) {
-      if (!e.target.classList.contains("star")) return;
-      current.favourite = true;
-      console.log(favourites);
-      localStorage.setItem("favourites", JSON.stringify(favourites));
-    });
-  } catch (err) {
-    throw err;
-  }
 };
 
 // load data from requested location
@@ -182,7 +152,7 @@ const getWeather = async function (location) {
     weatherContainer.insertAdjacentHTML("afterbegin", html);
   } catch (err) {
     setTimeout(() => {
-      renderError();
+      renderError("Please make valid search");
     }, 2000);
 
     throw err;
@@ -198,22 +168,65 @@ const convertFromUnix = function (unix) {
   return newHours + ":" + newMinutes;
 };
 
-const renderError = function () {
+const renderError = function (msg) {
   const html = `
       <div class="error-container">
         <i class="fas fa-exclamation-circle"></i>
-        <p class="err-message">Error: Please make valid search.</p>
+        <i class="far fa-window-close delete">
+        <p class="err-message">${msg}</p>
       </div>
   `;
 
-  weatherContainer.innerHTML = "";
+  // weatherContainer.innerHTML = "";
   weatherContainer.insertAdjacentHTML("beforebegin", html);
 };
 
 // Make delete button work
 weatherContainer.addEventListener("click", function (e) {
-  console.log(e.target);
   if (!e.target.classList.contains("delete")) return;
   const container = e.target.closest("section");
   container.classList.add("hide");
 });
+
+// save to local storage
+
+// const favourites = [];
+
+// const saveToFavourites = async function (location) {
+//   try {
+//     // current
+//     const current = {
+//       location: "",
+//       icon: "",
+//       temperature: "",
+//       description: "",
+//       windSpeed: "",
+//       sunrise: "",
+//       sunset: "",
+//       favourite: "",
+//     };
+//     const response = await fetch(`${API_URL}${location}&appid=${KEY}`);
+//     const data = await response.json();
+//     // store in current object
+//     current.location = data.name + "," + data.sys.country;
+//     current.icon = data.weather[0].id;
+//     current.temperature =
+//       KELVIN_TO_CELSIUS(data.main.temp).toFixed(1) +
+//       " or " +
+//       KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1);
+//     current.description = data.weather[0].description;
+//     current.windSpeed = data.wind.speed.toFixed(1);
+//     current.sunrise = convertFromUnix(data.sys.sunrise);
+//     current.sunset = convertFromUnix(data.sys.sunset);
+
+//     // make favourite button work
+//     weatherContainer.addEventListener("click", function (e) {
+//       if (!e.target.classList.contains("star")) return;
+//       current.favourite = true;
+//       console.log(current.location);
+//       localStorage.setItem("favourites", JSON.stringify(favourites));
+//     });
+//   } catch (err) {
+//     throw err;
+//   }
+// };
