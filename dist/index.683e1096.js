@@ -457,6 +457,8 @@ function hmrAcceptRun(bundle, id) {
 },{}],"c1VqH":[function(require,module,exports) {
 var _config = require("./config");
 // Get html elements
+const container = document.querySelector(".container");
+const inputContainer = document.querySelector(".user-input");
 const weatherContainer = document.querySelector(".data");
 const input = document.querySelector("#searchInp");
 const searchBtn = document.querySelector("#search");
@@ -483,8 +485,11 @@ const getDate = function(date) {
 };
 // create html
 const weatherHTML = function(data) {
+    // if (data.name === undefined) renderError('invalid')
     allShownData.push(data.name.toLowerCase());
-    return `\n      <section class='weatherData'>\n      <div class='weatherHeader'>\n      <p class="location">${data.name}, ${data.sys.country}</p>\n      <p class='actions'><i class="fas fa-star star"></i><i class="far fa-window-close delete"></i></p>\n      </div>\n        \n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n        <p class="date">${getDate(new Date())}</p>\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C or ${_config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1)}°F</p>\n          <p class="desc">${data.weather[0].description}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="sunrise">\n          <i class="fas fa-sun"></i>\n          ${convertFromUnix(data.sys.sunrise)}am\n        </p>\n          <p class="sunset"><i class="fas fa-moon"></i> ${convertFromUnix(data.sys.sunset)}pm</p>\n        </div>\n      </section>\n  `;
+    const html = `\n    <section class='weatherData'>\n      <div class='weatherHeader'>\n      <p class="location">${data.name}, ${data.sys.country}</p>\n      <p class='actions'><i class="fas fa-star star"></i><i class="far fa-window-close delete"></i></p>\n      </div>\n        \n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n        <p class="date">${getDate(new Date())}</p>\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C or ${_config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1)}°F</p>\n          <p class="desc">${data.weather[0].description}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="sunrise">\n          <i class="fas fa-sun"></i>\n          ${convertFromUnix(data.sys.sunrise)}am\n        </p>\n          <p class="sunset"><i class="fas fa-moon"></i> ${convertFromUnix(data.sys.sunset)}pm</p>\n        </div>\n      </section>\n  `;
+    // html.scrollIntoView({ behaviour: 'smooth' });
+    return html;
 };
 // get current location
 const getLocation = async function() {
@@ -523,6 +528,7 @@ searchBtn.addEventListener("click", function(e) {
 });
 document.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
+        console.log(e);
         checkExists(input.value);
         input.value = "";
     }
@@ -541,15 +547,17 @@ const getWeather = async function(location) {
         const spinner = document.querySelector(".spinner");
         const response = await fetch(`${_config.API_URL}${location}&appid=${_config.KEY}`);
         const data = await response.json();
+        spinner.style.display = "none";
         // add to page
         const html = weatherHTML(data);
-        // weatherContainer.innerHTML = "";
-        spinner.style.display = "none";
-        weatherContainer.insertAdjacentHTML("afterbegin", html);
+        weatherContainer.insertAdjacentHTML("beforeend", html);
+        const newItem = Array.from(weatherContainer.children).slice(-1);
+        newItem[0].scrollIntoView({
+            behaviour: "smooth"
+        });
+    // console.log(newItem[0]);
     } catch (err) {
-        setTimeout(()=>{
-            renderError("Please make valid search");
-        }, 2000);
+        renderError("Please make valid search");
         throw err;
     }
 };
@@ -561,15 +569,42 @@ const convertFromUnix = function(unix) {
     return newHours + ":" + newMinutes;
 };
 const renderError = function(msg) {
-    const html = `\n      <div class="error-container">\n      <p class = 'errMessage'>\n      <i class="fas fa-exclamation-circle"></i>\n      <i class="fas fa-times"></i>     \n      </p>\n\n        <p class="err-message">${msg}</p>\n      </div>\n  `;
+    const html = `\n      <div class="error-container">\n      <p class = 'errMessage'>\n      <i class="fas fa-exclamation-circle"></i>\n      <i class="fas fa-times delErr"></i>     \n      </p>\n\n        <p class="err-message">${msg}</p>\n      </div>\n  `;
     // weatherContainer.innerHTML = "";
+    weatherContainer.classList.add("overlay");
+    inputContainer.classList.add("overlay");
     weatherContainer.insertAdjacentHTML("beforebegin", html);
 };
-// Make delete button work
+// Make delete button work on containers
 weatherContainer.addEventListener("click", function(e) {
     if (!e.target.classList.contains("delete")) return;
-    const container = e.target.closest("section");
-    container.classList.add("hide");
+    const container1 = e.target.closest("section");
+    // remove from allShownData array
+    const current = container1.children[0].children[0].textContent.split(",")[0].toLowerCase();
+    const index = allShownData.indexOf(current);
+    allShownData.splice(index, 1);
+    // hide
+    container1.classList.add("hide");
+    setTimeout(()=>{
+        container1.remove();
+    }, 500);
+});
+// Make delete button work on error message
+const remove = (item)=>{
+    item.remove();
+    weatherContainer.classList.remove("overlay");
+    inputContainer.classList.remove("overlay");
+};
+container.addEventListener("click", function(e) {
+    if (!e.target.classList.contains("delErr") || e.target.closest("div" === container)) return;
+    if (e.target.classList.contains("delErr")) {
+        const errContainer = e.target.closest("div");
+        remove(errContainer);
+    }
+    if (e.target.closest("div") === container) {
+        const err = e.target.children[1];
+        remove(err);
+    }
 }); // save to local storage
  // const favourites = [];
  // const saveToFavourites = async function (location) {
