@@ -484,7 +484,6 @@ const getDate = function(date) {
 // create html
 const weatherHTML = function(data) {
     allShownData.push(data.name.toLowerCase());
-    console.log(allShownData);
     return `\n      <section class='weatherData'>\n      <div class='weatherHeader'>\n      <p class="location">${data.name}, ${data.sys.country}</p>\n      <p class='actions'><i class="fas fa-star star"></i><i class="far fa-window-close delete"></i></p>\n      </div>\n        \n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n        <p class="date">${getDate(new Date())}</p>\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C or ${_config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1)}°F</p>\n          <p class="desc">${data.weather[0].description}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="sunrise">\n          <i class="fas fa-sun"></i>\n          ${convertFromUnix(data.sys.sunrise)}am\n        </p>\n          <p class="sunset"><i class="fas fa-moon"></i> ${convertFromUnix(data.sys.sunset)}pm</p>\n        </div>\n      </section>\n  `;
 };
 // get current location
@@ -509,27 +508,22 @@ const geolocationData = async function(lat, lng) {
     }
 };
 const allShownData = [];
+const checkExists = function(input1) {
+    let exists;
+    if (allShownData.includes(input1)) exists = true;
+    else exists = false;
+    return exists ? renderError("Weather already displayed") : getWeather(input1);
+};
 // Make search work
 searchBtn.addEventListener("click", function(e) {
     e.preventDefault();
-    // const checkIfExisting = function (searched, data) {
-    //   const exists = data.includes(searched.toLowerCase());
-    //   return exists;
-    // };
-    let exists;
-    // allShownData.includes(input.value) ? exists === true : exists === false;
-    if (allShownData.includes(input.value)) exists = true;
-    if (!allShownData.includes(input.value)) exists = false;
-    console.log(exists);
-    exists ? renderError("Weather already displayed") : getWeather(input.value);
-    // saveToFavourites(input.value);
+    // check if search exists
+    checkExists(input.value);
     input.value = "";
 });
 document.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
-        // checkIfExisting(input.value, allShownData);
-        getWeather(input.value);
-        // saveToFavourites(input.value);
+        checkExists(input.value);
         input.value = "";
     }
 });
@@ -567,7 +561,7 @@ const convertFromUnix = function(unix) {
     return newHours + ":" + newMinutes;
 };
 const renderError = function(msg) {
-    const html = `\n      <div class="error-container">\n        <i class="fas fa-exclamation-circle"></i>\n        <i class="far fa-window-close delete">\n        <p class="err-message">${msg}</p>\n      </div>\n  `;
+    const html = `\n      <div class="error-container">\n      <p class = 'errMessage'>\n      <i class="fas fa-exclamation-circle"></i>\n      <i class="fas fa-times"></i>     \n      </p>\n\n        <p class="err-message">${msg}</p>\n      </div>\n  `;
     // weatherContainer.innerHTML = "";
     weatherContainer.insertAdjacentHTML("beforebegin", html);
 };

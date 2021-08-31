@@ -33,7 +33,6 @@ const getDate = function (date) {
 // create html
 const weatherHTML = function (data) {
   allShownData.push(data.name.toLowerCase());
-  console.log(allShownData);
   return `
       <section class='weatherData'>
       <div class='weatherHeader'>
@@ -96,29 +95,27 @@ const geolocationData = async function (lat, lng) {
   }
 };
 const allShownData = [];
-// Make search work
 
+const checkExists = function (input) {
+  let exists;
+  if (allShownData.includes(input)) {
+    exists = true;
+  } else {
+    exists = false;
+  }
+  return exists ? renderError("Weather already displayed") : getWeather(input);
+};
+// Make search work
 searchBtn.addEventListener("click", function (e) {
   e.preventDefault();
-
-  // const checkIfExisting = function (searched, data) {
-  //   const exists = data.includes(searched.toLowerCase());
-  //   return exists;
-  // };
-  let exists;
-  // allShownData.includes(input.value) ? exists === true : exists === false;
-  if (allShownData.includes(input.value)) exists = true;
-  if (!allShownData.includes(input.value)) exists = false;
-  console.log(exists);
-  exists ? renderError("Weather already displayed") : getWeather(input.value);
-  // saveToFavourites(input.value);
+  // check if search exists
+  checkExists(input.value);
   input.value = "";
 });
+
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
-    // checkIfExisting(input.value, allShownData);
-    getWeather(input.value);
-    // saveToFavourites(input.value);
+    checkExists(input.value);
     input.value = "";
   }
 });
@@ -171,8 +168,11 @@ const convertFromUnix = function (unix) {
 const renderError = function (msg) {
   const html = `
       <div class="error-container">
-        <i class="fas fa-exclamation-circle"></i>
-        <i class="far fa-window-close delete">
+      <p class = 'errMessage'>
+      <i class="fas fa-exclamation-circle"></i>
+      <i class="fas fa-times"></i>     
+      </p>
+
         <p class="err-message">${msg}</p>
       </div>
   `;
