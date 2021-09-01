@@ -120,8 +120,8 @@ searchBtn.addEventListener("click", function (e) {
 
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
-    console.log(e);
     checkExists(input.value);
+    // saveToFavourites(input.value)
     input.value = "";
   }
 });
@@ -215,60 +215,90 @@ const remove = (item) => {
 };
 
 container.addEventListener("click", function (e) {
-  if (
-    !e.target.classList.contains("delErr") ||
-    e.target.closest("div" === container)
-  )
-    return;
   if (e.target.classList.contains("delErr")) {
     const errContainer = e.target.closest("div");
     remove(errContainer);
   }
-  if (e.target.closest("div") === container) {
-    const err = e.target.children[1];
-    remove(err);
+  if (!e.target.closest("div").classList.contains("error-container")) {
+    const errCont = document.querySelector(".error-container");
+    if (errCont === null) return;
+    remove(errCont);
   }
 });
 
 // save to local storage
 
-// const favourites = [];
+const favourites = [];
+let currentLocation;
 
-// const saveToFavourites = async function (location) {
-//   try {
-//     // current
-//     const current = {
-//       location: "",
-//       icon: "",
-//       temperature: "",
-//       description: "",
-//       windSpeed: "",
-//       sunrise: "",
-//       sunset: "",
-//       favourite: "",
-//     };
-//     const response = await fetch(`${API_URL}${location}&appid=${KEY}`);
-//     const data = await response.json();
-//     // store in current object
-//     current.location = data.name + "," + data.sys.country;
-//     current.icon = data.weather[0].id;
-//     current.temperature =
-//       KELVIN_TO_CELSIUS(data.main.temp).toFixed(1) +
-//       " or " +
-//       KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1);
-//     current.description = data.weather[0].description;
-//     current.windSpeed = data.wind.speed.toFixed(1);
-//     current.sunrise = convertFromUnix(data.sys.sunrise);
-//     current.sunset = convertFromUnix(data.sys.sunset);
+const saveToFavourites = async function (location) {
+  try {
+    // current
+    const current = {
+      location: "",
+      icon: "",
+      temperature: "",
+      description: "",
+      windSpeed: "",
+      sunrise: "",
+      sunset: "",
+      favourite: "",
+    };
+    const response = await fetch(`${API_URL}${location}&appid=${KEY}`);
+    const data = await response.json();
 
-//     // make favourite button work
-//     weatherContainer.addEventListener("click", function (e) {
-//       if (!e.target.classList.contains("star")) return;
-//       current.favourite = true;
-//       console.log(current.location);
-//       localStorage.setItem("favourites", JSON.stringify(favourites));
-//     });
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+    // store in current object
+    current.location = data.name + "," + data.sys.country;
+    current.icon = data.weather[0].id;
+    current.temperature =
+      KELVIN_TO_CELSIUS(data.main.temp).toFixed(1) +
+      " or " +
+      KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1);
+    current.description = data.weather[0].description;
+    current.windSpeed = data.wind.speed.toFixed(1);
+    current.sunrise = convertFromUnix(data.sys.sunrise);
+    current.sunset = convertFromUnix(data.sys.sunset);
+    console.log(current);
+    currentLocation = current;
+    // return current;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// make favourite button work
+// weatherContainer.addEventListener("click", function (e) {
+//     if (!e.target.classList.contains("star")) return; current.favourite = true;
+//     console.log(current.location);
+//     localStorage.setItem("favourites", JSON.stringify(favourites));
+// });
+
+weatherContainer.addEventListener("click", function (e) {
+  if (!e.target.classList.contains("star")) return;
+  const favouritedItem = e.target.closest("div");
+  const favItemName = Array.from(favouritedItem.children)[0].textContent.split(
+    ","
+  )[0];
+  favourites.push(favItemName);
+  // save to local storage
+  localStorage.setItem("favourites", JSON.stringify(favourites));
+});
+
+const showFavs = document.querySelector("#render");
+
+showFavs.addEventListener("click", function (e) {
+  const favsFromStorage = JSON.parse(localStorage.getItem("favourites"));
+
+  favsFromStorage.forEach((favourite) => {
+    checkExists(favourite);
+  });
+});
+
+window.addEventListener("load", function () {
+  // load favourites
+  const favsFromStorage = JSON.parse(localStorage.getItem("favourites"));
+
+  favsFromStorage.forEach((favourite) => {
+    checkExists(favourite);
+  });
+});

@@ -53,7 +53,7 @@ h1 {
 }
 
 .overlay {
-  opacity: 0.2;
+  opacity: 0.05;
 }
 
 .data {
@@ -72,6 +72,10 @@ h1 {
   transition: 500ms;
 }
 
+.weatherData:hover {
+  transform: translateY(-2%);
+}
+
 .weatherHeader {
   border: none;
   background-color: lightblue;
@@ -83,6 +87,11 @@ h1 {
 
 .delete {
   cursor: pointer;
+  opacity: 0.5;
+}
+
+.delete:hover {
+  opacity: 1;
 }
 
 .delErr {
@@ -141,12 +150,18 @@ h1 {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   color: white;
   display: flex;
+  font-size: 1.2em;
   margin: auto;
   margin-top: 10%;
-  padding: 2%;
+  padding: 5%;
   text-align: center;
+  transition: 200ms;
   width: fit-content;
   z-index: 99;
+}
+
+.error-container:hover {
+  transform: scale(1.1);
 }
 
 .errMessage {
