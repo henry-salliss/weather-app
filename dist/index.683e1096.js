@@ -608,18 +608,31 @@ container.addEventListener("click", function(e) {
     }
 });
 // favourites
-const favourites = [];
+let favourites = [];
 weatherContainer.addEventListener("click", function(e) {
     if (!e.target.classList.contains("star")) return;
     if (!e.target.classList.contains("favourited")) {
         e.target.classList.add("favourited");
+        favourites = JSON.parse(localStorage.getItem("favourites"));
         const favouritedItem = e.target.closest("div");
         const favItemName = Array.from(favouritedItem.children)[0].textContent.split(",")[0];
         if (favourites.includes(favItemName)) return;
         favourites.push(favItemName);
         console.log(favourites);
-        // save to local storage
         localStorage.setItem("favourites", JSON.stringify(favourites));
+    // save to local storage
+    // const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
+    // console.log(favouritesArr);
+    // if (favouritesArr === null) {
+    //   const bothArr = favourites.concat(favouritesArr);
+    //   const index = bothArr.lastIndexOf(favItemName);
+    //   bothArr.splice(index, 1);
+    //   console.log("hello");
+    //   if (bothArr.includes(favItemName)) return;
+    //   localStorage.setItem("favourites", JSON.stringify(bothArr));
+    // } else {
+    //   localStorage.setItem("favourites", JSON.stringify(favourites));
+    // }
     } else if (e.target.classList.contains("favourited")) {
         e.target.classList.remove("favourited");
         const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
@@ -636,7 +649,9 @@ weatherContainer.addEventListener("click", function(e) {
 // load fav data on click
 showFavs.addEventListener("click", function(e) {
     const favsFromStorage = JSON.parse(localStorage.getItem("favourites"));
-    if (favsFromStorage === null) {
+    favourites = favsFromStorage;
+    console.log(favourites);
+    if (favsFromStorage === null || favourites.length === 0) {
         const html = `\n        <div class="error-container-one">\n        <p class = 'errMessage'>\n        <i class="fas fa-exclamation-circle"></i>\n        <i class="fas fa-times delErr"></i>     \n        </p>\n        <p class="err-message">No favourites saved</p>\n    </div>\n        `;
         weatherContainer.insertAdjacentHTML("beforebegin", html);
         weatherContainer.classList.add("overlay");
