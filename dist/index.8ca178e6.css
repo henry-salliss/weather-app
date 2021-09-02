@@ -102,6 +102,14 @@ h1 {
   color: rgb(207, 207, 83);
 }
 
+.favourited {
+  color: rgb(207, 207, 83);
+}
+
+.favourited:hover {
+  color: black;
+}
+
 .star {
   cursor: pointer;
   margin-right: 4px;
@@ -160,6 +168,21 @@ h1 {
   z-index: 99;
 }
 
+.error-container-one {
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  color: white;
+  display: flex;
+  font-size: 1.2em;
+  margin: auto;
+  margin-top: 10%;
+  padding: 5%;
+  text-align: center;
+  transition: 200ms;
+  width: fit-content;
+  z-index: 99;
+}
+
 .error-container:hover {
   transform: scale(1.1);
 }
@@ -184,8 +207,18 @@ h1 {
   /* height: 0; */
 }
 
-#otherTest {
-  margin-top: 500px;
+.favourites-section {
+  display: flex;
+  margin: auto;
+  margin-top: 5%;
+}
+
+#render {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 115px;
+  padding: 2%;
 }
 
 /*# sourceMappingURL=index.8ca178e6.css.map */

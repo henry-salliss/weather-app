@@ -9,6 +9,7 @@ const inputContainer = document.querySelector(".user-input");
 const weatherContainer = document.querySelector(".data");
 const input = document.querySelector("#searchInp");
 const searchBtn = document.querySelector("#search");
+const showFavs = document.querySelector("#render");
 // create html and get date
 
 // Get date
@@ -33,14 +34,18 @@ const getDate = function (date) {
 };
 
 // create html
-const weatherHTML = function (data) {
-  // if (data.name === undefined) renderError('invalid')
+const weatherHTML = function (data, fav) {
+  let local = JSON.parse(localStorage.getItem("favourites"));
+  // if (window.localStorage.favourites.length === 0) local = "";
+  if (local === null) local = "";
   allShownData.push(data.name.toLowerCase());
   const html = `
     <section class='weatherData'>
       <div class='weatherHeader'>
       <p class="location">${data.name}, ${data.sys.country}</p>
-      <p class='actions'><i class="fas fa-star star"></i><i class="far fa-window-close delete"></i></p>
+      <p class='actions'><i class="fas fa-star star ${
+        local.includes(data.name) ? "favourited" : " "
+      }"></i><i class="far fa-window-close delete"></i></p>
       </div>
         
         <br>
@@ -121,7 +126,6 @@ searchBtn.addEventListener("click", function (e) {
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
     checkExists(input.value);
-    // saveToFavourites(input.value)
     input.value = "";
   }
 });
@@ -140,7 +144,7 @@ const renderSpinner = function () {
 
 // load data from requested location
 
-const getWeather = async function (location) {
+const getWeather = async function (location, placement) {
   try {
     renderSpinner();
     // AJAX call
@@ -152,9 +156,10 @@ const getWeather = async function (location) {
     // add to page
     const html = weatherHTML(data);
     weatherContainer.insertAdjacentHTML("beforeend", html);
+
+    // add smooth scrolling
     const newItem = Array.from(weatherContainer.children).slice(-1);
     newItem[0].scrollIntoView({ behaviour: "smooth" });
-    // console.log(newItem[0]);
   } catch (err) {
     renderError("Please make valid search");
     throw err;
@@ -172,17 +177,16 @@ const convertFromUnix = function (unix) {
 
 const renderError = function (msg) {
   const html = `
-      <div class="error-container">
-      <p class = 'errMessage'>
-      <i class="fas fa-exclamation-circle"></i>
-      <i class="fas fa-times delErr"></i>     
-      </p>
+    <div class="error-container">
+    <p class = 'errMessage'>
+    <i class="fas fa-exclamation-circle"></i>
+    <i class="fas fa-times delErr"></i>     
+    </p>
+    
+    <p class="err-message">${msg}</p>
+    </div>
+    `;
 
-        <p class="err-message">${msg}</p>
-      </div>
-  `;
-
-  // weatherContainer.innerHTML = "";
   weatherContainer.classList.add("overlay");
   inputContainer.classList.add("overlay");
   weatherContainer.insertAdjacentHTML("beforebegin", html);
@@ -226,79 +230,60 @@ container.addEventListener("click", function (e) {
   }
 });
 
-// save to local storage
+// favourites
 
 const favourites = [];
-let currentLocation;
-
-const saveToFavourites = async function (location) {
-  try {
-    // current
-    const current = {
-      location: "",
-      icon: "",
-      temperature: "",
-      description: "",
-      windSpeed: "",
-      sunrise: "",
-      sunset: "",
-      favourite: "",
-    };
-    const response = await fetch(`${API_URL}${location}&appid=${KEY}`);
-    const data = await response.json();
-
-    // store in current object
-    current.location = data.name + "," + data.sys.country;
-    current.icon = data.weather[0].id;
-    current.temperature =
-      KELVIN_TO_CELSIUS(data.main.temp).toFixed(1) +
-      " or " +
-      KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1);
-    current.description = data.weather[0].description;
-    current.windSpeed = data.wind.speed.toFixed(1);
-    current.sunrise = convertFromUnix(data.sys.sunrise);
-    current.sunset = convertFromUnix(data.sys.sunset);
-    console.log(current);
-    currentLocation = current;
-    // return current;
-  } catch (err) {
-    throw err;
-  }
-};
-
-// make favourite button work
-// weatherContainer.addEventListener("click", function (e) {
-//     if (!e.target.classList.contains("star")) return; current.favourite = true;
-//     console.log(current.location);
-//     localStorage.setItem("favourites", JSON.stringify(favourites));
-// });
 
 weatherContainer.addEventListener("click", function (e) {
   if (!e.target.classList.contains("star")) return;
-  const favouritedItem = e.target.closest("div");
-  const favItemName = Array.from(favouritedItem.children)[0].textContent.split(
-    ","
-  )[0];
-  favourites.push(favItemName);
-  // save to local storage
-  localStorage.setItem("favourites", JSON.stringify(favourites));
+  if (!e.target.classList.contains("favourited")) {
+    e.target.classList.add("favourited");
+    const favouritedItem = e.target.closest("div");
+    const favItemName = Array.from(
+      favouritedItem.children
+    )[0].textContent.split(",")[0];
+    if (favourites.includes(favItemName)) return;
+    favourites.push(favItemName);
+    console.log(favourites);
+    // save to local storage
+    localStorage.setItem("favourites", JSON.stringify(favourites));
+  } else if (e.target.classList.contains("favourited")) {
+    e.target.classList.remove("favourited");
+    const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
+    console.log(favouritesArr);
+    const name = Array.from(
+      e.target.closest("div").children
+    )[0].textContent.split(",")[0];
+
+    const index = favouritesArr.indexOf(name);
+    console.log(index);
+    favouritesArr.splice(index, 1);
+    favourites.splice(index, 1);
+    console.log(favouritesArr);
+    localStorage.setItem("favourites", JSON.stringify(favouritesArr));
+  }
 });
 
-const showFavs = document.querySelector("#render");
-
+// load fav data on click
 showFavs.addEventListener("click", function (e) {
   const favsFromStorage = JSON.parse(localStorage.getItem("favourites"));
-
+  if (favsFromStorage === null) {
+    const html = `
+        <div class="error-container-one">
+        <p class = 'errMessage'>
+        <i class="fas fa-exclamation-circle"></i>
+        <i class="fas fa-times delErr"></i>     
+        </p>
+        <p class="err-message">No favourites saved</p>
+    </div>
+        `;
+    weatherContainer.insertAdjacentHTML("beforebegin", html);
+    weatherContainer.classList.add("overlay");
+    inputContainer.classList.add("overlay");
+  }
+  if (favsFromStorage === null) return;
   favsFromStorage.forEach((favourite) => {
     checkExists(favourite);
-  });
-});
-
-window.addEventListener("load", function () {
-  // load favourites
-  const favsFromStorage = JSON.parse(localStorage.getItem("favourites"));
-
-  favsFromStorage.forEach((favourite) => {
-    checkExists(favourite);
+    allShownData.push(favourite);
   });
 });
