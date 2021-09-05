@@ -31,6 +31,10 @@ h1 {
   color: white;
 }
 
+button {
+  cursor: pointer;
+}
+
 /**************** animations  ******************/
 
 @keyframes rotate {
@@ -91,9 +95,9 @@ h1 {
   cursor: pointer;
 }
 
-.star:hover {
+/* .star:hover {
   color: rgb(207, 207, 83);
-}
+} */
 
 .favourited {
   color: rgb(207, 207, 83);
@@ -131,6 +135,7 @@ h1 {
 #search {
   margin: auto;
   margin-top: 2%;
+  border-radius: 0px;
 }
 
 #searchInp {
@@ -195,6 +200,7 @@ h1 {
   justify-content: space-between;
   width: 115px;
   padding: 2%;
+  border-radius: 0px;
 }
 
 .favourites-section {
