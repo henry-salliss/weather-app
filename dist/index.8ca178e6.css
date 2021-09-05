@@ -50,17 +50,14 @@ button {
   0% {
     opacity: 0;
     transform: translateY(10%);
-    height: 100%;
   }
   50% {
     opacity: 1;
-    height: 50%;
   }
 
   100% {
     opacity: 0;
     transform: translateY(-10%);
-    height: 0;
   }
 }
 
@@ -103,9 +100,9 @@ button {
   color: rgb(207, 207, 83);
 }
 
-.favourited:hover {
+/* .favourited:hover {
   color: black;
-}
+} */
 
 .star {
   cursor: pointer;
@@ -213,13 +210,17 @@ button {
   animation: slide-up-fade-in ease 1s forwards;
   border-radius: 25px;
   color: black;
-  background-color: rgb(255, 255, 255);
+  background-color: lightblue;
   display: flex;
   margin: auto;
   margin-top: 10%;
   padding: 5%;
   transition: 100ms;
   width: fit-content;
+  position: absolute;
+  top: 5%;
+  left: 20%;
+  z-index: 99;
 }
 
 .fav-msg {
@@ -290,16 +291,11 @@ button {
   }
 
   #search {
-    margin: auto;
-    margin-top: 2%;
+    padding: 1%;
   }
 
   #searchInp {
-    margin: auto;
-  }
-
-  .overlay {
-    opacity: 0.05;
+    padding: 1%;
   }
 
   /**************** weather data section styles (ipad)  ******************/
@@ -314,6 +310,109 @@ button {
     flex-flow: wrap;
     flex-direction: row;
     justify-content: center;
+    margin-top: 10%;
+  }
+
+  .weatherData {
+    width: 225px;
+    margin-bottom: 10%;
+    font-size: 0.8em;
+  }
+
+  .weatherHeader {
+    padding: 1%;
+  }
+
+  .more-detail {
+    padding: 3%;
+    margin-top: 5%;
+  }
+
+  /**************** favourite popup message styles (ipad)  ******************/
+
+  #render {
+    padding: 3%;
+  }
+
+  /**************** error popup message styles (ipad)  ******************/
+
+  .error-container {
+    font-size: 1.1em;
+    margin-top: 5%;
+    padding: 2%;
+  }
+
+  .error-container-one {
+    font-size: 1.1em;
+    margin-top: 5%;
+    padding: 2%;
+  }
+
+  .errMessage {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+}
+
+/************************** Desktop styles  **********************************************************************************************************/
+
+@media only screen and (min-width: 1068px) {
+  /**************** icon styles (desktop)  ******************/
+
+  .star:hover {
+    color: rgb(207, 207, 83);
+  }
+
+  .favourited:hover {
+    color: black;
+  }
+
+  /**************** search and input section styles (ipad)  ******************/
+
+  .user-input {
+    font-size: 1.1em;
+  }
+
+  #search {
+    padding: 2%;
+    margin-top: 5%;
+  }
+
+  /**************** weather data section styles (ipad)  ******************/
+
+  .weatherData {
+    margin-left: 10%;
+    margin-right: 5%;
+  }
+
+  .data {
+    margin-top: 3%;
+    width: max-content;
+  }
+
+  .weatherData {
+    width: 330px;
+    margin-bottom: 8%;
+    font-size: 1.1em;
+  }
+
+  .weatherHeader {
+    padding: 1%;
+  }
+
+  /**************** error popup message styles (desktop)  ******************/
+
+  .error-container {
+    font-size: 1.3em;
+    margin-top: 5%;
+    padding: 2%;
+  }
+
+  .error-container-one {
+    font-size: 1.1em;
+    margin-top: 5%;
+    padding: 2%;
   }
 }
 

@@ -650,7 +650,7 @@ const favMessage = function(msg, location) {
     location.insertAdjacentHTML("beforebegin", html);
     setTimeout(()=>{
         document.querySelector(".favourite-message").remove();
-    }, 1000);
+    }, 750);
 };
 // load fav data on click
 showFavs.addEventListener("click", function(e) {
@@ -666,45 +666,21 @@ showFavs.addEventListener("click", function(e) {
     }
     if (favsFromStorage === null) return;
     // load fav data to ui
+    const check = [];
     favsFromStorage.forEach((favourite)=>{
-        console.log(allShownData);
         if (allShownData.includes(favourite.toLowerCase())) {
-            renderError(`Favourites already be shown`);
+            if (check.length > 1) return;
+            console.log(allShownData);
+            renderError(`Favourites already shown`);
+            weatherContainer.classList.add("overlay");
+            inputContainer.classList.add("overlay");
+            check.push(1);
             return;
         }
         allShownData.push(favourite.toLowerCase());
         checkExists(favourite);
     });
-}); // weatherContainer.addEventListener("click", function (e) {
- //     if (!e.target.classList.contains("star")) return;
- //     if (!e.target.classList.contains("favourited")) {
- //         e.target.classList.add("favourited");
- //         // const local = JSON.parse(localStorage.getItem("favourites"));
- //         // local === null ? favourites = [] : favourites = local;
- //         // get name of fav item
- //         const favouritedItem = e.target.closest("div");
- //         const favItemName = Array.from(
- //             favouritedItem.children
- //         )[0].textContent.split(",")[0];
- //         if (favourites.includes(favItemName)) return;
- //         // push to fav array and push to local storage
- //         favourites.push(favItemName);
- //         localStorage.setItem("favourites", JSON.stringify(favourites));
- // // show message
- // favMessage('Saved to favourites', e.target.closest('section'));
- //     } else if (e.target.classList.contains("favourited")) {
- //         e.target.classList.remove("favourited");
- //         // get name of unfav item
- //         const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
- //         const name = Array.from(
- //             e.target.closest("div").children
- //         )[0].textContent.split(",")[0];
- //         // remove item from local storage and fav array
- //         const index = favouritesArr.indexOf(name);
- //         favouritesArr.splice(index, 1);
- //         favourites.splice(index, 1);
- //         // push new fav array to local storage
- //         localStorage.setItem("favourites", JSON.stringify(favouritesArr));
+});
 
 },{"./config":"beA2m"}],"beA2m":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
