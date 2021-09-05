@@ -1,3 +1,5 @@
+/**************** base styles  ******************/
+
 * {
   padding: 0;
   margin: 0;
@@ -25,6 +27,41 @@ p {
   padding: 1%;
 }
 
+h1 {
+  color: white;
+}
+
+/**************** animations  ******************/
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slide-up-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10%);
+    height: 100%;
+  }
+  50% {
+    opacity: 1;
+    height: 50%;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-10%);
+    height: 0;
+  }
+}
+
+/**************** icon styles  ******************/
+
 .owf {
   color: white;
 }
@@ -33,56 +70,12 @@ p {
   font-size: 10em;
 }
 
-h1 {
-  color: white;
-}
+/* sun style */
 
-.user-input {
-  display: flex;
-  margin: auto;
-  text-align: center;
-  width: fit-content;
-}
-
-#searchInp {
-  margin: auto;
-}
-#search {
-  margin: auto;
-  margin-top: 2%;
-}
-
-.overlay {
-  opacity: 0.05;
-}
-
-.data {
-  margin: auto;
-  text-align: center;
-  margin-top: 20%;
-  width: fit-content;
-}
-
-.weatherData {
-  border: 8px solid #fff;
-  border-radius: 10px;
-  width: 250px;
-  background-color: black;
-  margin-bottom: 20%;
-  transition: 500ms;
-}
-
-.weatherData:hover {
-  transform: translateY(-2%);
-}
-
-.weatherHeader {
-  border: none;
-  background-color: lightblue;
-  padding: 2%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.owf-800:before,
+.owf-800-d:before {
+  color: orange;
+  margin-right: 15px;
 }
 
 .delete {
@@ -115,16 +108,76 @@ h1 {
   margin-right: 4px;
   font-size: 1.05em;
 }
-.details {
-  background-color: #fff;
+
+.spinner {
+  animation: rotate 2s infinite linear;
+  color: white;
+  fill: #f38e82;
 }
 
-.country {
+.sun {
   border-right: none;
+}
+
+/**************** search and input section styles  ******************/
+
+.user-input {
+  display: flex;
+  margin: auto;
+  text-align: center;
+  width: fit-content;
+}
+
+#search {
+  margin: auto;
+  margin-top: 2%;
+}
+
+#searchInp {
+  margin: auto;
+}
+
+.overlay {
+  opacity: 0.05;
+}
+
+/**************** weather data section styles  ******************/
+
+.data {
+  margin: auto;
+  text-align: center;
+  margin-top: 20%;
+  width: fit-content;
+}
+
+.weatherData {
+  border: 8px solid #fff;
+  border-radius: 10px;
+  width: 250px;
+  background-color: black;
+  margin-bottom: 20%;
+  transition: 500ms;
+}
+
+.weatherData:hover {
+  transform: translateY(-2%);
+}
+
+.weatherHeader {
+  border: none;
+  background-color: lightblue;
+  padding: 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .main-details {
   color: #fff;
+}
+
+.country {
+  border-right: none;
 }
 
 .more-detail {
@@ -134,24 +187,44 @@ h1 {
   background-color: rgb(255, 255, 255);
 }
 
-.sun {
-  border-right: none;
+/**************** favourite popup message styles  ******************/
+
+#render {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 115px;
+  padding: 2%;
 }
 
-.spinner {
-  animation: rotate 2s infinite linear;
-  color: white;
-  fill: #f38e82;
+.favourites-section {
+  display: flex;
+  margin: auto;
+  margin-top: 5%;
 }
 
-@keyframes rotate {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.favourite-message {
+  animation: slide-up-fade-in ease 1s forwards;
+  border-radius: 25px;
+  color: black;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  margin: auto;
+  margin-top: 10%;
+  padding: 5%;
+  transition: 100ms;
+  width: fit-content;
 }
+
+.fav-msg {
+  padding: 4%;
+}
+
+.bookmark {
+  margin-right: 5%;
+}
+
+/**************** error popup message styles  ******************/
 
 .error-container {
   border-radius: 25px;
@@ -193,32 +266,49 @@ h1 {
   justify-content: space-evenly;
 }
 
-/* sun style */
-
-.owf-800:before,
-.owf-800-d:before {
-  color: orange;
-  margin-right: 15px;
-}
-
 .hide {
   opacity: 0;
   transform: scale(0.01);
-  /* height: 0; */
 }
 
-.favourites-section {
-  display: flex;
-  margin: auto;
-  margin-top: 5%;
-}
+/************************** iPad styles  **********************************************************************************************************/
 
-#render {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 115px;
-  padding: 2%;
+@media only screen and (min-width: 768px) {
+  /**************** search and input section styles (ipad)  ******************/
+
+  .user-input {
+    display: flex;
+    margin: auto;
+    text-align: center;
+    width: fit-content;
+  }
+
+  #search {
+    margin: auto;
+    margin-top: 2%;
+  }
+
+  #searchInp {
+    margin: auto;
+  }
+
+  .overlay {
+    opacity: 0.05;
+  }
+
+  /**************** weather data section styles (ipad)  ******************/
+
+  .weatherData {
+    margin-left: 10%;
+    margin-right: 5%;
+  }
+
+  .data {
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 /*# sourceMappingURL=index.8ca178e6.css.map */

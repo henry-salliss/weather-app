@@ -490,7 +490,7 @@ const weatherHTML = function(data, fav) {
     // if (window.localStorage.favourites.length === 0) local = "";
     if (local === null) local = "";
     allShownData.push(data.name.toLowerCase());
-    const html = `\n    <section class='weatherData'>\n      <div class='weatherHeader'>\n      <p class="location">${data.name}, ${data.sys.country}</p>\n      <p class='actions'><i class="fas fa-star star ${local.includes(data.name) ? "favourited" : " "}"></i><i class="far fa-window-close delete"></i></p>\n      </div>\n        \n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n        <p class="date">${getDate(new Date())}</p>\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C or ${_config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1)}°F</p>\n          <p class="desc">${data.weather[0].description}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="sunrise">\n          <i class="fas fa-sun"></i>\n          ${convertFromUnix(data.sys.sunrise)}am\n        </p>\n          <p class="sunset"><i class="fas fa-moon"></i> ${convertFromUnix(data.sys.sunset)}pm</p>\n        </div>\n      </section>\n  `;
+    const html = `\n    <section class='weatherData'>\n      <div class='weatherHeader'>\n      <p class="location">${data.name}, ${data.sys.country}</p>\n      <p class='actions'><i class="fas fa-star star ${local.includes(data.name) ? "favourited" : " "}"></i><i class="far fa-window-close delete"></i></p>\n      </div>\n        <div class='message-insert'></div>\n        <br>\n        <i class='owf owf-${data.weather[0].id} owf-5x'></i>\n        <br>\n        <div class="main-details">\n        <p class="date">${getDate(new Date())}</p>\n          <p class="temp">${_config.KELVIN_TO_CELSIUS(data.main.temp).toFixed(1)}°C or ${_config.KELVIN_TO_FAHRENHEIT(data.main.temp).toFixed(1)}°F</p>\n          <p class="desc">${data.weather[0].description}</p>\n        </div>\n        <div class="more-detail">\n          <p class="windSpeed"><i class="fas fa-wind"></i> ${data.wind.speed.toFixed(1)}mph</p>\n          <p class="sunrise">\n          <i class="fas fa-sun"></i>\n          ${convertFromUnix(data.sys.sunrise)}am\n        </p>\n          <p class="sunset"><i class="fas fa-moon"></i> ${convertFromUnix(data.sys.sunset)}pm</p>\n        </div>\n      </section>\n  `;
     // html.scrollIntoView({ behaviour: 'smooth' });
     return html;
 };
@@ -613,56 +613,98 @@ weatherContainer.addEventListener("click", function(e) {
     if (!e.target.classList.contains("star")) return;
     if (!e.target.classList.contains("favourited")) {
         e.target.classList.add("favourited");
+        // set favs to local storage
         favourites = JSON.parse(localStorage.getItem("favourites"));
+        // get name of item
         const favouritedItem = e.target.closest("div");
         const favItemName = Array.from(favouritedItem.children)[0].textContent.split(",")[0];
+        if (favourites === null) favourites = [];
         if (favourites.includes(favItemName)) return;
+        // update fav array and local storage
         favourites.push(favItemName);
-        console.log(favourites);
+        // allShownData.push(favItemName);
         localStorage.setItem("favourites", JSON.stringify(favourites));
-    // save to local storage
-    // const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
-    // console.log(favouritesArr);
-    // if (favouritesArr === null) {
-    //   const bothArr = favourites.concat(favouritesArr);
-    //   const index = bothArr.lastIndexOf(favItemName);
-    //   bothArr.splice(index, 1);
-    //   console.log("hello");
-    //   if (bothArr.includes(favItemName)) return;
-    //   localStorage.setItem("favourites", JSON.stringify(bothArr));
-    // } else {
-    //   localStorage.setItem("favourites", JSON.stringify(favourites));
-    // }
+        // show message
+        const messageInsert = Array.from(e.target.closest("section").children)[1];
+        favMessage("Added to favourites", messageInsert);
+        console.log(allShownData);
     } else if (e.target.classList.contains("favourited")) {
         e.target.classList.remove("favourited");
+        // get name of item
         const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
-        console.log(favouritesArr);
         const name = Array.from(e.target.closest("div").children)[0].textContent.split(",")[0];
+        // slice item from fav array and local storage
         const index = favouritesArr.indexOf(name);
-        console.log(index);
         favouritesArr.splice(index, 1);
         favourites.splice(index, 1);
-        console.log(favouritesArr);
+        // update local storage
         localStorage.setItem("favourites", JSON.stringify(favouritesArr));
+        // insert message
+        const messageInsert = Array.from(e.target.closest("section").children)[1];
+        favMessage("Removed from favourites", messageInsert);
+        console.log(allShownData);
     }
 });
+const favMessage = function(msg, location) {
+    const html = `\n    <div class="favourite-message">\n    <p class="fav-msg">${msg} <i class="far fa-bookmark bookmark"></i></p>\n    </div>\n    `;
+    location.insertAdjacentHTML("beforebegin", html);
+    setTimeout(()=>{
+        document.querySelector(".favourite-message").remove();
+    }, 1000);
+};
 // load fav data on click
 showFavs.addEventListener("click", function(e) {
+    // set fav array as local storage
     const favsFromStorage = JSON.parse(localStorage.getItem("favourites"));
     favourites = favsFromStorage;
-    console.log(favourites);
+    // if no local storage render error
     if (favsFromStorage === null || favourites.length === 0) {
-        const html = `\n        <div class="error-container-one">\n        <p class = 'errMessage'>\n        <i class="fas fa-exclamation-circle"></i>\n        <i class="fas fa-times delErr"></i>     \n        </p>\n        <p class="err-message">No favourites saved</p>\n    </div>\n        `;
+        const html = `\n        <div class="error-container-one">\n        <p class = 'errMessage'>\n        <i class="fas fa-exclamation-circle"></i>\n        <i class="fas fa-times delErr"></i>     \n        </p>\n        <p class="err-message">No favourites saved</p>\n        </div>\n        `;
         weatherContainer.insertAdjacentHTML("beforebegin", html);
         weatherContainer.classList.add("overlay");
         inputContainer.classList.add("overlay");
     }
     if (favsFromStorage === null) return;
+    // load fav data to ui
     favsFromStorage.forEach((favourite)=>{
+        console.log(allShownData);
+        if (allShownData.includes(favourite.toLowerCase())) {
+            renderError(`Favourites already be shown`);
+            return;
+        }
+        allShownData.push(favourite.toLowerCase());
         checkExists(favourite);
-        allShownData.push(favourite);
     });
-});
+}); // weatherContainer.addEventListener("click", function (e) {
+ //     if (!e.target.classList.contains("star")) return;
+ //     if (!e.target.classList.contains("favourited")) {
+ //         e.target.classList.add("favourited");
+ //         // const local = JSON.parse(localStorage.getItem("favourites"));
+ //         // local === null ? favourites = [] : favourites = local;
+ //         // get name of fav item
+ //         const favouritedItem = e.target.closest("div");
+ //         const favItemName = Array.from(
+ //             favouritedItem.children
+ //         )[0].textContent.split(",")[0];
+ //         if (favourites.includes(favItemName)) return;
+ //         // push to fav array and push to local storage
+ //         favourites.push(favItemName);
+ //         localStorage.setItem("favourites", JSON.stringify(favourites));
+ // // show message
+ // favMessage('Saved to favourites', e.target.closest('section'));
+ //     } else if (e.target.classList.contains("favourited")) {
+ //         e.target.classList.remove("favourited");
+ //         // get name of unfav item
+ //         const favouritesArr = JSON.parse(localStorage.getItem("favourites"));
+ //         const name = Array.from(
+ //             e.target.closest("div").children
+ //         )[0].textContent.split(",")[0];
+ //         // remove item from local storage and fav array
+ //         const index = favouritesArr.indexOf(name);
+ //         favouritesArr.splice(index, 1);
+ //         favourites.splice(index, 1);
+ //         // push new fav array to local storage
+ //         localStorage.setItem("favourites", JSON.stringify(favouritesArr));
 
 },{"./config":"beA2m"}],"beA2m":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
